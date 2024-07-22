@@ -7,16 +7,19 @@ type TodolistPropsType = {
     tasks: Array<TaskType>
     removeTask: (taskId: string) => void
     addTask: (title: string) => void
+    changeTaskStatus: (taskID: string, taskStatus: boolean) => void
     tasksFilter: (filter: FilterType) => void
 }
-export const Todolist = ({title, tasks, removeTask, addTask, tasksFilter}: TodolistPropsType) => {
+export const Todolist = ({title, tasks, removeTask, addTask, changeTaskStatus, tasksFilter}: TodolistPropsType) => {
     const [taskTitle, setTitle] = useState<string>('')
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setTitle(event.currentTarget.value)
     }
     const addTaskHandler = () => {
-        addTask(taskTitle)
-        setTitle('')
+        if(taskTitle.trim()){
+            addTask(taskTitle.trim())
+            setTitle('')
+        }
     }
     const addTaskOnKeyUpHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         if(event.key === 'Enter') {
@@ -41,10 +44,14 @@ export const Todolist = ({title, tasks, removeTask, addTask, tasksFilter}: Todol
                         const removeTaskHandler = () => {
                             removeTask(t.id)
                         }
+                        const onChangeTaskStatusHandler = (event: ChangeEvent<HTMLInputElement>) => {
+                            const newChekboxStatus = event.currentTarget.checked
+                            changeTaskStatus(t.id, newChekboxStatus)
+                        }
 
                             return (
                                 <li key={t.id}>
-                                    <input type="checkbox" checked={t.isDone}/>
+                                    <input type="checkbox" checked={t.isDone} onChange={onChangeTaskStatusHandler}/>
                                     <span>{t.title}</span>
                                     <Button title={'x'} onclick={removeTaskHandler}/>
                                 </li>
