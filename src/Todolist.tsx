@@ -6,15 +6,20 @@ type TodolistPropsType = {
     todolistID: string
     title: string
     tasks: Array<TaskType>
+    removeTodolist: (todolistID: string) => void
     removeTask: (todolistID: string, taskId: string) => void
     addTask: (todolistID: string, title: string) => void
     changeTaskStatus: (todolistID: string, taskID: string, taskStatus: boolean) => void
     tasksFilter: (todolistID: string, filter: FilterType) => void
     filter: FilterType
 }
-export const Todolist = ({todolistID, title, tasks, removeTask, addTask, changeTaskStatus, tasksFilter, filter}: TodolistPropsType) => {
+export const Todolist = ({todolistID, title, tasks, removeTodolist, removeTask, addTask, changeTaskStatus, tasksFilter, filter}: TodolistPropsType) => {
     const [taskTitle, setTitle] = useState<string>('')
     const [error, setError] = useState<null | string>(null)
+
+    const removeTodolistHandler = () => {
+        removeTodolist(todolistID)
+    }
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setTitle(event.currentTarget.value)
     }
@@ -37,7 +42,10 @@ export const Todolist = ({todolistID, title, tasks, removeTask, addTask, changeT
     }
     return (
         <div>
-            <h3>{title}</h3>
+            <div className={'todolist-title-container'}>
+                <h3>{title}</h3>
+                <Button title={'x'} onclick={removeTodolistHandler}/>
+            </div>
             <div>
                 <input className={error ? 'error' : ''} value={taskTitle} onChange={onChangeHandler}
                        onKeyUp={addTaskOnKeyUpHandler}/>

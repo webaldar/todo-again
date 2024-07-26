@@ -51,7 +51,11 @@ function App() {
     //
     //
     // const [tasks, setTasks] = useState<TodolistType[]>(startTasks)
-
+    const removeTodolist = (todolistID: string) => {
+        const newTodolists = todolists.filter(todo => ( todo.id !== todolistID))
+        setTodolists(newTodolists)
+        delete tasks[todolistID]
+    }
     const removeTask = (todolistID: string, taskId: string) => {
         setTasks({...tasks, [todolistID]: tasks[todolistID].filter(task => (task.id !== taskId))})
         // const filteredTasks = tasks.filter(task => {
@@ -78,10 +82,10 @@ function App() {
         <div className="App">
             {todolists.map(tl => {
                 let tasksForTodolist = tasks[tl.id]
-                if (tl.filter == 'active') {
+                if (tl.filter === 'active') {
                     tasksForTodolist = tasks[tl.id].filter(task => (!task.isDone))
                 }
-                if (tl.filter == 'completed') {
+                if (tl.filter === 'completed') {
                     tasksForTodolist = tasks[tl.id].filter(task => (task.isDone))
                 }
                 return (
@@ -89,6 +93,7 @@ function App() {
                               todolistID={tl.id}
                               title={tl.title}
                               tasks={tasksForTodolist}
+                              removeTodolist={removeTodolist}
                               removeTask={removeTask}
                               addTask={addTask}
                               changeTaskStatus={changeTaskStatus}
